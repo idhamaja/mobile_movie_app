@@ -1,4 +1,5 @@
 import { useRouter } from "expo-router";
+import { useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -7,6 +8,7 @@ import {
   Text,
   View,
 } from "react-native";
+import MovieCard from "../../../components/MovieCard";
 import SearchBar from "../../../components/SearchBar";
 import { icons } from "../../../constants/icons";
 import { images } from "../../../constants/images";
@@ -15,6 +17,8 @@ import useFetch from "../../../services/useFetch";
 
 export default function Index() {
   const router = useRouter();
+
+  const [search, setSearch] = useState("");
 
   const {
     data: movies,
@@ -39,10 +43,14 @@ export default function Index() {
             className="mt-10 self-center"
           />
         ) : moviesError ? (
-          <Text>Error: {moviesError?.message}</Text>
+          <Text className="text-red-500 text-center mt-4">
+            Error: {moviesError?.message ?? "Something went wrong."}
+          </Text>
         ) : (
           <View className="flex-1 mt-5">
             <SearchBar
+              value={search}
+              onChangeText={setSearch}
               onPress={() => router.push("/search")}
               placeholder="Search for a Movie"
             />
@@ -53,9 +61,7 @@ export default function Index() {
 
               <FlatList
                 data={movies}
-                renderItem={({ item }) => (
-                  <Text className="text-white text-sm">{item.title}</Text>
-                )}
+                renderItem={({ item }) => <MovieCard {...item} />}
                 keyExtractor={(item) => item.id.toString()}
                 numColumns={3}
                 columnWrapperStyle={{
