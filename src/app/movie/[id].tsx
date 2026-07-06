@@ -5,7 +5,7 @@ const MovieDetails = () => {
   const { id } = useLocalSearchParams();
 
   return (
-    <View>
+    <View className="bg-primary flex-1" >
       <Text>Details for Movie ID: {id}</Text>
     </View>
   );

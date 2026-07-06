@@ -42,3 +42,26 @@ export const updateSearchCount = async (query: string, movie: Movie) => {
     throw error;
   }
 };
+
+export const getTrendingMovies = async (): Promise<
+  TrendingMovie[] | undefined
+> => {
+  try {
+    const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID, [
+      Query.limit(20), // pull more, then dedupe down to 5
+      Query.orderDesc("count"),
+    ]);
+
+    const seen = new Set<number>();
+    const unique = result.documents.filter((doc: any) => {
+      if (seen.has(doc.movie_id)) return false;
+      seen.add(doc.movie_id);
+      return true;
+    });
+
+    return unique.slice(0, 5) as unknown as TrendingMovie[];
+  } catch (error) {
+    console.log(error);
+    return undefined;
+  }
+};

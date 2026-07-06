@@ -36,8 +36,6 @@ const search = () => {
     const timeoutId = setTimeout(async () => {
       if (searchQuery.trim()) {
         await loadMovies();
-        if (movies?.length > 0 && movies?.[0])
-          updateSearchCount(searchQuery, movies[0]);
       } else {
         reset();
       }
@@ -45,6 +43,12 @@ const search = () => {
 
     return () => clearTimeout(timeoutId);
   }, [searchQuery]);
+
+  useEffect(() => {
+    if (movies?.length > 0 && movies?.[0]) {
+      updateSearchCount(searchQuery, movies[0]);
+    }
+  }, [movies]);
 
   // Only log the search once we actually have a result
   useEffect(() => {
