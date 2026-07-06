@@ -32,14 +32,15 @@ const search = () => {
   );
 
   useEffect(() => {
-    const func = async () => {
+    const timeoutId = setTimeout(async () => {
       if (searchQuery.trim()) {
-        loadMovies();
+        await loadMovies();
       } else {
         reset();
       }
-    };
-    func();
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
   }, [searchQuery]);
   return (
     <View className="flex-1 bg-primary">
@@ -95,6 +96,15 @@ const search = () => {
               </Text>
             )}
           </>
+        }
+        ListEmptyComponent={
+          !loading && !error ? (
+            <View className="mt-10 px-5">
+              <Text className="text-center text-gray-500">
+                {searchQuery.trim() ? "No Movies Found" : "Search For a Movie"}
+              </Text>
+            </View>
+          ) : null
         }
       />
     </View>
