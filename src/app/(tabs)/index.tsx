@@ -14,7 +14,7 @@ import TrendingCard from "../../../components/TrendingCard";
 import { icons } from "../../../constants/icons";
 import { images } from "../../../constants/images";
 import { fetchMovies } from "../../../services/api";
-import { getTrendingMovies } from "../../../services/appwrite";
+import { getTrendingMovies } from "../../../services/auth";
 import useFetch from "../../../services/useFetch";
 
 export default function Index() {
@@ -70,6 +70,7 @@ export default function Index() {
 
                 <FlatList
                   horizontal
+                  nestedScrollEnabled
                   showsHorizontalScrollIndicator={false}
                   ItemSeparatorComponent={() => <View className="w-4" />}
                   className="mb-4 mt-3"
