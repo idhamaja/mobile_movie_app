@@ -13,6 +13,7 @@ import SearchBar from "../../../components/SearchBar";
 import { icons } from "../../../constants/icons";
 import { images } from "../../../constants/images";
 import { fetchMovies } from "../../../services/api";
+import { updateSearchCount } from "../../../services/appwrite";
 import useFetch from "../../../services/useFetch";
 
 const search = () => {
@@ -35,6 +36,8 @@ const search = () => {
     const timeoutId = setTimeout(async () => {
       if (searchQuery.trim()) {
         await loadMovies();
+        if (movies?.length > 0 && movies?.[0])
+          updateSearchCount(searchQuery, movies[0]);
       } else {
         reset();
       }
@@ -42,6 +45,13 @@ const search = () => {
 
     return () => clearTimeout(timeoutId);
   }, [searchQuery]);
+
+  // Only log the search once we actually have a result
+  useEffect(() => {
+    if (movies && movies.length > 0) {
+      updateSearchCount(searchQuery, movies[0]);
+    }
+  }, [movies]);
   return (
     <View className="flex-1 bg-primary">
       <Image
